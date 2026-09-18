@@ -195,6 +195,16 @@ def main():
     # ---------------------------------------------------------
     # 10. Fill structural zeros
     # ---------------------------------------------------------
+    # Only repositories with successful or genuine zero-result
+    # collection should receive structural zeros.
+    #
+    # API-error repositories remain NaN for activity features
+    # so that unavailable data is not interpreted as inactivity.
+
+    structural_zero_statuses = [
+        "success",
+        "zero_commits"
+    ]
 
     zero_features = [
         "contributors_count",
@@ -209,8 +219,14 @@ def main():
         "activity_consistency"
     ]
 
+    valid_zero_mask = features["status"].isin(
+        structural_zero_statuses
+    )
+
     for column in zero_features:
-        features[column] = features[column].fillna(0)
+        features.loc[valid_zero_mask, column] = (
+            features.loc[valid_zero_mask, column].fillna(0)
+        )
 
     # ---------------------------------------------------------
     # 11. Derived ratios
@@ -232,7 +248,7 @@ def main():
         features["active_months"] > 0,
         features["commits_365d"]
         / features["active_months"],
-        0
+        np.nan
     )
 
     # ---------------------------------------------------------
@@ -245,17 +261,12 @@ def main():
         .astype(str)
         .str.strip()
         .str.lower()
-        .replace(
-            {
-                "vim script": "vim script",
-                "jupyter notebook": "jupyter notebook"
-            }
-        )
     )
 
     # ---------------------------------------------------------
     # 13. Log transformations for skewed variables
     # ---------------------------------------------------------
+    # np.log1p preserves NaN values for API-unavailable records.
 
     skewed_columns = [
         "stars",
@@ -273,7 +284,7 @@ def main():
         )
 
     # ---------------------------------------------------------
-    # 14. Sort columns / rows
+    # 14. Sort rows
     # ---------------------------------------------------------
 
     features = features.sort_values(
@@ -301,6 +312,7 @@ def main():
 
     print()
     print("Selected feature summary:")
+
     print(
         features[
             [
@@ -322,6 +334,23 @@ def main():
     print(
         features["status"]
         .value_counts()
+    )
+
+    print()
+    print("Activity values unavailable due to API errors:")
+
+    error_mask = features["status"] == "error"
+
+    print(
+        features.loc[
+            error_mask,
+            [
+                "full_name",
+                "commits_365d",
+                "active_months",
+                "contributors_count"
+            ]
+        ]
     )
 
     print()
