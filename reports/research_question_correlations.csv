@@ -1,0 +1,7 @@
+Relationship,Correlation
+Popularity ↔ Activity,0.5213292600265993
+Popularity ↔ Contributors,0.6141087558292107
+Popularity ↔ Forks,0.9389175385291987
+Age ↔ Activity,-0.2798014508543279
+Push Recency ↔ Activity,-0.5914202103249993
+Contributors ↔ Activity,0.5962558195120691
