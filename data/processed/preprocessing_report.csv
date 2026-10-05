@@ -1,0 +1,5 @@
+feature,missing_count,missing_percentage,mechanism_assessment,treatment
+description,3,1.0,MAR/structural: repositories may not provide a description,Explicit category: No description provided
+language,25,8.333333333333332,MAR/structural: GitHub may not assign a primary language,Explicit category: Unknown
+topics,83,27.666666666666668,MAR/structural: repository topics are optional,Explicit category: No topics specified
+license,41,13.666666666666666,MAR/structural: repositories may not specify a license,Explicit category: No license specified

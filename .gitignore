@@ -15,14 +15,16 @@ env/
 .ipynb_checkpoints/
 
 # Data files
+# Large/raw collection artifacts remain local
 data/raw/*
-data/processed/*
 data/external/*
 
-# Keep folder structure
-!data/raw/.gitkeep
-!data/processed/.gitkeep
-!data/external/.gitkeep
+# Keep the processed analytical dataset in Git
+!data/processed/
+!data/processed/*.csv
+
+# Large raw commit history
+data/raw/repository_commits.csv
 
 # Generated reports
 reports/automated/*
